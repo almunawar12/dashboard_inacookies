@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import ProductItems from './product-items';
 import Link from 'next/link';
+import { CartItem } from '@/services/data-types';
 
 const products = [
     {
@@ -29,7 +30,7 @@ const products = [
 
 export default function ProductList() {
     const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
-    const [cart, setCart] = useState<any[]>([]);
+    const [cart, setCart] = useState<CartItem[]>([]);
 
     const handleAdd = (id: number) => {
         setQuantities((prev) => ({
