@@ -1,8 +1,9 @@
 'use client'
 import React, { useState } from 'react';
 import ProductItems from './product-items';
-import Link from 'next/link';
 import { CartItem } from '@/services/data-types';
+import { toast, ToastContainer } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const products = [
     {
@@ -31,6 +32,7 @@ const products = [
 export default function ProductList() {
     const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
     const [cart, setCart] = useState<CartItem[]>([]);
+    const router = useRouter();
 
     const handleAdd = (id: number) => {
         setQuantities((prev) => ({
@@ -74,7 +76,13 @@ export default function ProductList() {
     };
 
     const handleCheckout = () => {
-        localStorage.setItem('cart', JSON.stringify(cart));
+        if (cart.length === 0) {
+            toast.error('keranjang kosong')
+            return;
+        } else {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            router.push('/checkout-detail');
+        }
     };
 
     return (
@@ -95,14 +103,14 @@ export default function ProductList() {
             </div>
 
             <div className="fixed bottom-0 left-0 w-full bg-white p-4 shadow-md flex justify-center">
-                <Link
-                    href="/checkout-detail"
+                <button
                     className="bg-primary text-white py-2 px-8 rounded-full"
                     onClick={handleCheckout}
                 >
                     Keranjang ({cart.length} item)
-                </Link>
+                </button>
             </div>
+            <ToastContainer />
         </div>
     );
 }
